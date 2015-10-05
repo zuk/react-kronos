@@ -45,6 +45,10 @@ A fast, intuitive, and elegant date and time picker for React.
 - `returnAs` - *string* : onChange format `JS_DATE`, `MOMENT`, `ISO`, `STRING` (default: same as input)
 - `min` - *Date()*, *Moment()*, *ISO* to set as the minimum datetime
 - `max` - *Date()*, *Moment()*, *ISO* to set as the maximum datetime
+- `minTimeOfDay` - *string* : min selectable time; e.g. "9:00 am", "10:15 pm"
+- `maxTimeOfDay` - *string* : max selectable time; e.g. "9:00 am", "10:15 pm"
+- `timeIncrement` - *number* : increment the selectable times by this much (default: `30`)
+- `timeIncrementUnits` - *string* : increment the selectable times using these units; e.g. 'hours', 'minutes', 'seconds' (default: 'minutes')
 - `closeOnSelect` - *boolean* : closes the dropdown when a value is selected (default: `true`)
 - `closeOnBlur` - *boolean* : closes the dropdown when the field is blurred (default: `true`)
 - `placeholder` - *string* : placeholder text when there is no value
@@ -67,7 +71,7 @@ A fast, intuitive, and elegant date and time picker for React.
 **1.1**
 - options:
   - date (restrict calendar to show only days, or with months, or with years)
-  - time (set increments, set ranges of time)
+  - time (set increments, set ranges of time) [ DONE ]
 
 **1.2**
 - support for connected start & end date+time

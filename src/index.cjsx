@@ -24,6 +24,10 @@ Kronos = React.createClass
     time: React.PropTypes.any
     min: React.PropTypes.any
     max: React.PropTypes.any
+    minTimeOfDay: React.PropTypes.string
+    maxTimeOfDay: React.PropTypes.string
+    timeIncrement: React.PropTypes.string
+    timeIncrementUnits: React.PropTypes.string
     shouldTriggerOnChangeForDateTimeOutsideRange: React.PropTypes.bool
     format: React.PropTypes.string
     onChange: React.PropTypes.func
@@ -247,6 +251,10 @@ Kronos = React.createClass
           level={@state.level}
           setLevel={(level) => @setState level: level}
           validate={@validate}
+          timeIncrement={@props.timeIncrement}
+          timeIncrementUnits={@props.timeIncrementUnits}
+          minTimeOfDay={@props.minTimeOfDay}
+          maxTimeOfDay={@props.maxTimeOfDay}
         />
       }
     </div>

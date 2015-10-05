@@ -139,30 +139,41 @@ Calendar = React.createClass
 
       days
 
-    hours: (datetime) ->
+    hours: (datetime, props) ->
       datetime or= do Moment
-      start = datetime.clone().startOf 'day'
-      end = datetime.clone().endOf 'day'
+      if props.minTimeOfDay?
+        min = Moment(props.minTimeOfDay,'h:mm a')
+        start = datetime.clone().set({hour: min.hour(), minute: min.minute()})
+      else
+        start = datetime.clone().startOf 'day'
+      if props.maxTimeOfDay?
+        max = Moment(props.maxTimeOfDay,'h:mm a')
+        end = datetime.clone().set({hour: max.hour(), minute: max.minute()})
+      else
+        end = datetime.clone().endOf 'day'
       hours = []
       closeBefore = datetime.clone().subtract 31, 'minutes'
       closeAfter = datetime.clone().add 31, 'minutes'
 
-      Moment()
-        .range start, end
-        .by Units.HOUR, (hour) ->
-          hours.push
-            moment: hour
-            label: hour.format 'h:mm a'
-            selected: hour.isSame datetime, 'minute'
-            nearestBefore: hour.isBetween closeBefore, datetime
-            nearestAfter: hour.isBetween datetime, closeAfter
-          halfHour = hour.clone().add 30, 'minutes'
-          hours.push
-            moment: halfHour
-            label: halfHour.format 'h:mm a'
-            selected: halfHour.isSame datetime, 'minute'
-            nearestBefore: halfHour.isBetween closeBefore, datetime
-            nearestAfter: halfHour.isBetween datetime, closeAfter
+      if props.timeIncrement?
+        increment = props.timeIncrement
+      else
+        increment = 30
+
+      if props.timeIncrementUnits?
+        incrementUnits = props.timeIncrementUnits
+      else
+        incrementUnits = 'minutes'
+
+      t = start
+      while t <= end
+        hours.push
+          moment: t
+          label: t.format 'h:mm a'
+          selected: t.isSame datetime, 'minute'
+          nearestBefore: t.isBetween closeBefore, datetime
+          nearestAfter: t.isBetween datetime, closeAfter
+        t = t.clone().add(increment, incrementUnits)
 
       hours
 
@@ -182,7 +193,7 @@ Calendar = React.createClass
           title={@getTitle[@props.level] @props.datetime}
         /> }
       <div ref='grid' className={cn @props.classes.grid, @props.level}>
-        { @getCells[@props.level] @props.datetime
+        { @getCells[@props.level] @props.datetime, @props
             .map (cell, i) =>
               type = switch
                 when cell.header then 'header'
