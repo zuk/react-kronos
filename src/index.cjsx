@@ -144,6 +144,11 @@ Kronos = React.createClass
   validate: (datetime, timeUnit, isSaving) ->
     outsideRange = false
 
+    if @props.validator?
+      otherwiseValid = @props.validator(datetime, timeUnit, isSaving)
+    else
+      otherwiseValid = true
+
     if @props.min and Moment(datetime).isBefore @props.min
       outsideRange = true
     if @props.max and Moment(datetime).isAfter @props.max
@@ -157,7 +162,7 @@ Kronos = React.createClass
       @setState dateTimeExceedsValidRange: outsideRange
       if @props.shouldTriggerOnChangeForDateTimeOutsideRange then return true
 
-    return !outsideRange
+    return otherwiseValid && !outsideRange
 
   commit: (datetime) ->
     returnAs = @props.returnAs or @state.type

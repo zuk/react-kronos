@@ -36,6 +36,7 @@ Kronos = React.createClass({
     minTimeOfDay: React.PropTypes.string,
     maxTimeOfDay: React.PropTypes.string,
     timeIncrement: React.PropTypes.string,
+    timeIncrementUnits: React.PropTypes.string,
     shouldTriggerOnChangeForDateTimeOutsideRange: React.PropTypes.bool,
     format: React.PropTypes.string,
     onChange: React.PropTypes.func,
@@ -180,8 +181,13 @@ Kronos = React.createClass({
     }
   },
   validate: function(datetime, timeUnit, isSaving) {
-    var outsideRange;
+    var otherwiseValid, outsideRange;
     outsideRange = false;
+    if (this.props.validator != null) {
+      otherwiseValid = this.props.validator(datetime, timeUnit, isSaving);
+    } else {
+      otherwiseValid = true;
+    }
     if (this.props.min && Moment(datetime).isBefore(this.props.min)) {
       outsideRange = true;
     }
@@ -201,7 +207,7 @@ Kronos = React.createClass({
         return true;
       }
     }
-    return !outsideRange;
+    return otherwiseValid && !outsideRange;
   },
   commit: function(datetime) {
     var base, result, returnAs;
@@ -343,6 +349,7 @@ Kronos = React.createClass({
       })(this)),
       "validate": this.validate,
       "timeIncrement": this.props.timeIncrement,
+      "timeIncrementUnits": this.props.timeIncrementUnits,
       "minTimeOfDay": this.props.minTimeOfDay,
       "maxTimeOfDay": this.props.maxTimeOfDay
     }));
